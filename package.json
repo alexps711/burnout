@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.4.2",
+    "braces": "^3.0.2",
     "expo": "^33.0.3",
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
+    "querystringify": "^2.1.1",
     "react": "16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-action-button": "^2.8.5",
@@ -18,7 +20,8 @@
     "react-native-stopwatch-timer": "0.0.20",
     "react-native-swipe-list-view": "^1.5.5",
     "react-native-swipeable": "^0.6.0",
-    "react-navigation": "^3.11.0"
+    "react-navigation": "^3.11.0",
+    "ws": "^7.0.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.1.1",
