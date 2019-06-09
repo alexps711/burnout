@@ -3,6 +3,7 @@ import WorkoutScreen from '../screens/WorkoutScreen';
 import MusclesScreen from '../screens/MusclesScreen';
 import SelectedMuscleScreen from '../screens/SelectedMuscleScreen';
 import AddScreen from '../screens/AddScreen';
+import LogScreen from '../screens/LogScreen';
 
 const MainStack = createStackNavigator({
     Main: WorkoutScreen,
@@ -11,6 +12,7 @@ const MainStack = createStackNavigator({
 });
 
 export default createStackNavigator({
+    Log: LogScreen,
     Main: {
         screen: MainStack,
         //Avoid duplicate headers.

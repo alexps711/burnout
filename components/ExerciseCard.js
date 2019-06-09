@@ -17,7 +17,6 @@ export default class ExerciseCard extends React.Component {
 
     render() {
         const { content, setsInput, repsInput } = this.props;
-
         return (
             <Card on>
                 <CardItem header>

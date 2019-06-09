@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, FlatList, Text, StyleSheet, Button, AsyncStorage, TouchableHighlight } from 'react-native';
+import { ScrollView, FlatList, Text, StyleSheet, Button, AsyncStorage, TouchableHighlight } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ListItem } from 'native-base';
 import { EventRegister } from 'react-native-event-listeners';
@@ -28,7 +28,7 @@ export default class MusclesScreen extends React.Component {
         };
     }
 
-    componentWillMount() {
+    componentDidUpdate() {
 
         this._updateMusclesList();
         // Listens for when the user wants to add a new muscle group.
@@ -48,14 +48,15 @@ export default class MusclesScreen extends React.Component {
      * Sets the state to the current muscles list in the storage.
      */
     _updateMusclesList = async () => {
-        try {
+        try {
             const musclesList = await AsyncStorage.getItem('muscles');
-            if (musclesList !== undefined) {
+            //Might be redundant -- CHECK
+            if (musclesList !== null) {
                 this.setState({ muscles: JSON.parse(musclesList) });
             }
         } catch (error) {
-            //do something.
-        }  
+            console.log(err);
+        }
     };
 
     render() {
@@ -89,13 +90,5 @@ const styles = StyleSheet.create({
     },
     item: {
         fontSize: 20
-    },
-    rowBack: {
-        alignItems: 'center',
-        backgroundColor: '#DDD',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 15,
-    },
+    }
 });

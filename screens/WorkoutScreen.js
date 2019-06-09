@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, FlatList, View, StyleSheet, Text, Button } from 'react-native';
+import { Animated, FlatList, View, StyleSheet, Text, Button, AsyncStorage } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ListItem, Content } from 'native-base';
 import { Stopwatch } from 'react-native-stopwatch-timer';
@@ -27,11 +27,9 @@ export default class WorkoutScreen extends React.Component {
         };
     };
 
-    /** Retrieve the excercise the user has selected. */
-    componentWillUpdate() {
-        //Remove already existing listeners.
-        EventRegister.removeEventListener(this.listener);
-
+    componentDidMount() {
+        this._startWorkout();
+        //Listen to new exercises added.
         this.listener = EventRegister.addEventListener('goBack', (data) => {
             this.setState({
                 changed: !this.state.changed,
@@ -62,37 +60,50 @@ export default class WorkoutScreen extends React.Component {
         }).start();
     };
 
+    /** End the current workout and go back to the log screen */
+    _finishWorkout = () => {
+        this._saveWorkout();
+        this.props.navigation.popToTop();
+    }
+
+    /** Save the workout locally, accessed by date. */
+    _saveWorkout = async () => {
+        let date = Date.now();
+        //New workout to be saved with the current date as a key.
+        const newWorkout = {[`${date}`]: this.state.excercises};
+
+        try {
+            const workouts = await AsyncStorage.getItem('workouts');
+            await AsyncStorage.setItem('workouts', [...workouts, newWorkout]);
+        } catch (err) {
+            //Do something.
+        }
+    }
+
     render() {
         let { timerPosition, startTime, changed, workoutStarted, excercises } = this.state;
-        //Render the main screen if the workout has started, or the start button otherwise.
-        if (workoutStarted) {
-            return (
+        return (
+            <SafeAreaView style={styles.container}>
+                <View>
+                    <ListItem><Text style={styles.listItem}>Start Time: {startTime}</Text></ListItem>
+                    <Animated.View style={[styles.stopwatch, timerPosition.getLayout()]}>
+                        <Stopwatch options={stopwatchStyle} start={workoutStarted} />
+                    </Animated.View>
+                </View>
+                <View>
+                    <Button title="Finish workout" onPress={() => this._finishWorkout()} />
+                </View>
+                <Content padder>
+                    <FlatList data={excercises} extraData={changed} renderItem={({ item }) =>
+                        <ExerciseCard content={item.key} />}
+                    />
+                </Content>
+                <ActionButton style={{ position: 'absolute' }} buttonColor="rgba(0,76,60,1)" onPress={() => this.props.navigation.navigate('Muscles')} />
+            </SafeAreaView>
+        );
+    }
+};
 
-                <SafeAreaView style={styles.container}>
-                    <View>
-                        <ListItem><Text style={styles.listItem}>Start Time: {startTime}</Text></ListItem>
-                        <Animated.View style={[styles.stopwatch, timerPosition.getLayout()]}>
-                            <Stopwatch options={stopwatchStyle} start={workoutStarted} />
-                        </Animated.View>
-                    </View>
-                    <Content padder>
-                        <FlatList data={excercises} extraData={changed} renderItem={({ item }) =>
-                            <ExerciseCard  content={item.key} />}
-                        />
-                    </Content>
-                    <ActionButton style={{ position: 'absolute' }} buttonColor="rgba(0,76,60,1)" onPress={() => this.props.navigation.navigate('Muscles')} />
-                </SafeAreaView>
-            );
-        }
-        else {
-            return (
-                <SafeAreaView style={styles.button}>
-                    <Button title='Start Workout' onPress={() => this._startWorkout()} />
-                </SafeAreaView>
-            )
-        }
-    };
-}
 
 const styles = StyleSheet.create({
     container: {
@@ -111,10 +122,10 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontSize: 25,
-    }, 
+    },
     listItem: {
         fontSize: 20,
-    }, 
+    },
 });
 
 const stopwatchStyle = {
