@@ -4,6 +4,10 @@ import {Ionicons} from '@expo/vector-icons';
 import SettingsScreen from '../screens/SettingsScreen';
 import WorkoutStack from './WorkoutStack';
 
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default createBottomTabNavigator({
     Workout: WorkoutStack,
     Settings: SettingsScreen,

@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class SettingsScreen extends React.Component {
     render() {
         return (

@@ -4,28 +4,24 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "web": "expo start --web",
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.4.2",
-    "braces": "^3.0.2",
-    "expo": "^33.0.3",
+    "expo": "^33.0.0",
     "native-base": "^2.12.1",
-    "prop-types": "^15.7.2",
-    "querystringify": "^2.1.1",
-    "react": "16.8.6",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react": "16.8.3",
+    "react-dom": "^16.8.6",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-action-button": "^2.8.5",
     "react-native-event-listeners": "^1.0.3",
     "react-native-stopwatch-timer": "0.0.20",
-    "react-native-swipe-list-view": "^1.5.5",
     "react-native-swipeable": "^0.6.0",
-    "react-navigation": "^3.11.0",
-    "ws": "^7.0.0"
+    "react-native-web": "^0.11.4",
+    "react-navigation": "^3.11.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.1.1",
-    "react-native-cli": "^2.0.1"
+    "babel-preset-expo": "^5.1.1"
   },
   "private": true
 }

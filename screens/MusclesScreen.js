@@ -5,6 +5,10 @@ import { ListItem } from 'native-base';
 import { EventRegister } from 'react-native-event-listeners';
 import Swipeable from 'react-native-swipeable';
 
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class MusclesScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: "Muscles",
@@ -28,8 +32,7 @@ export default class MusclesScreen extends React.Component {
         };
     }
 
-    componentDidUpdate() {
-
+    componentDidMount() {
         this._updateMusclesList();
         // Listens for when the user wants to add a new muscle group.
         this.listener = EventRegister.addEventListener('updateMuscles', async (data) => {

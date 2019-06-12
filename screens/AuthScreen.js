@@ -1,7 +1,10 @@
 import React from 'react';
 import {View, TextInput, StyleSheet, Button, AsyncStorage } from 'react-native';
 
-
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class AuthScreen extends React.Component {
 
     _signIn = async () => {

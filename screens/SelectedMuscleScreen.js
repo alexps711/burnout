@@ -3,7 +3,10 @@ import { SafeAreaView, ScrollView, FlatList, Text, StyleSheet, Button } from 're
 import { ListItem } from 'native-base';
 import { EventRegister } from 'react-native-event-listeners';
 
-
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class SelectedMuscleScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: navigation.getParam('name')

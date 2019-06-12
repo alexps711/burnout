@@ -2,6 +2,10 @@ import React from 'react';
 import { View, Button, StyleSheet, TextInput } from 'react-native';
 import { EventRegister } from 'react-native-event-listeners';
 
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class AddScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Add',

@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, AsyncStorage } from 'react-native';
 
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class LoadingScreen extends React.Component {
     constructor(props){
         super(props);

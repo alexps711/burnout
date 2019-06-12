@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { StyleSheet, Text, TextInput } from 'react-native';
 import { Card, CardItem } from 'native-base';
 
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class ExerciseCard extends React.Component {
     static propTypes = {
         content: PropTypes.string.isRequired,

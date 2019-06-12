@@ -7,6 +7,10 @@ import { EventRegister } from 'react-native-event-listeners'
 import ExerciseCard from '../components/ExerciseCard';
 import ActionButton from 'react-native-action-button';
 
+/**
+ * @author Alejandro Perez
+ * @version 12/06/2019
+ */
 export default class WorkoutScreen extends React.Component {
     static navigationOptions = {
         title: 'Workout',
@@ -63,18 +67,21 @@ export default class WorkoutScreen extends React.Component {
     /** End the current workout and go back to the log screen */
     _finishWorkout = () => {
         this._saveWorkout();
+        EventRegister.emit('backToLog');
         this.props.navigation.popToTop();
     }
 
-    /** Save the workout locally, accessed by date. */
+    /** Save the workout locally, accessed by id. */
     _saveWorkout = async () => {
-        let date = Date.now();
-        //New workout to be saved with the current date as a key.
-        const newWorkout = {[`${date}`]: this.state.excercises};
-
+        let id = 0;
+        
         try {
-            const workouts = await AsyncStorage.getItem('workouts');
-            await AsyncStorage.setItem('workouts', [...workouts, newWorkout]);
+            //Increment id until a free one is found.
+            while ( await AsyncStorage.getItem(`${id}`) !== null) {
+                i++;
+            }
+            //Store the workout.
+            await AsyncStorage.setItem(`${id}`, JSON.stringify(this.state.excercises));
         } catch (err) {
             //Do something.
         }
