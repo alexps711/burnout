@@ -1,11 +1,12 @@
 import React from 'react';
-import { Animated, FlatList, View, StyleSheet, Text, Button, AsyncStorage } from 'react-native';
+import { Animated, FlatList, View, StyleSheet, Text, Button, AsyncStorage, TouchableHighlight } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ListItem, Content } from 'native-base';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import { EventRegister } from 'react-native-event-listeners'
 import ExerciseCard from '../components/ExerciseCard';
 import ActionButton from 'react-native-action-button';
+import Swipeable from 'react-native-swipeable';
 
 /**
  * @author Alejandro Perez
@@ -23,7 +24,7 @@ export default class WorkoutScreen extends React.Component {
             //Used to re-render the list of exercises.
             changed: false,
             //List containing the exercises selected.
-            excercises: [],
+            exercises: [],
             startTime: '',
             workoutStarted: false,
             //Keep track of the position if the timer.
@@ -38,10 +39,21 @@ export default class WorkoutScreen extends React.Component {
             this.setState({
                 changed: !this.state.changed,
                 //Add to the list of exercises the one selected by the user. 
-                excercises: [...this.state.excercises, { key: data, sets: '0', reps: '0' }]
+                exercises: [...this.state.exercises, { key: data, sets: '0', reps: '0' }]
             });
         });
-    };
+        //Update exercises list every time user inputs sets or reps.
+        this.repsListener = EventRegister.addEventListener('exerciseChange', (updatedExercise) => {
+            //Avoid duplicates in the exercises list.
+            let exerciseArray = [...this.state.exercises];
+            for(let i=0; i<exerciseArray.length; i++){
+                if(exerciseArray[i].key === updatedExercise.key){
+                    exerciseArray[i] = updatedExercise;
+                }
+            } 
+            this.setState({exercises: exerciseArray});
+        });
+    }
 
     /**  Adjust the screen for the workout. */
     _startWorkout = () => {
@@ -74,21 +86,20 @@ export default class WorkoutScreen extends React.Component {
     /** Save the workout locally, accessed by id. */
     _saveWorkout = async () => {
         let id = 0;
-        
         try {
             //Increment id until a free one is found.
             while ( await AsyncStorage.getItem(`${id}`) !== null) {
                 i++;
             }
             //Store the workout.
-            await AsyncStorage.setItem(`${id}`, JSON.stringify(this.state.excercises));
+            await AsyncStorage.setItem(`${id}`, JSON.stringify(this.state.exercises));
         } catch (err) {
             //Do something.
         }
-    }
+    };
 
     render() {
-        let { timerPosition, startTime, changed, workoutStarted, excercises } = this.state;
+        let { timerPosition, startTime, changed, workoutStarted, exercises } = this.state;
         return (
             <SafeAreaView style={styles.container}>
                 <View>
@@ -101,8 +112,10 @@ export default class WorkoutScreen extends React.Component {
                     <Button title="Finish workout" onPress={() => this._finishWorkout()} />
                 </View>
                 <Content padder>
-                    <FlatList data={excercises} extraData={changed} renderItem={({ item }) =>
-                        <ExerciseCard content={item.key} />}
+                    <FlatList data={exercises} extraData={changed} renderItem={({ item }) =>
+                        <Swipeable rightButtons={[<TouchableHighlight style={styles.removeButton}><Text style={styles.removeText}>Remove</Text></TouchableHighlight>]} onLeftActionRelease={() => console.log("hello")} >
+                            <ExerciseCard content={item.key} />
+                        </Swipeable>}
                     />
                 </Content>
                 <ActionButton style={{ position: 'absolute' }} buttonColor="rgba(0,76,60,1)" onPress={() => this.props.navigation.navigate('Muscles')} />
@@ -124,7 +137,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    excercise: {
+    exercise: {
         paddingTop: 20,
     },
     titleText: {
@@ -133,6 +146,14 @@ const styles = StyleSheet.create({
     listItem: {
         fontSize: 20,
     },
+    removeButton: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'red',
+    }, 
+    removeText: {
+        paddingLeft: 5
+    }
 });
 
 const stopwatchStyle = {

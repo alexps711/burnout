@@ -1,6 +1,8 @@
 import React from 'react';
-import { SafeAreaView, Button, AsyncStorage, Text } from 'react-native';
+import { SafeAreaView, Button, AsyncStorage, Text, FlatList } from 'react-native';
 import { EventRegister } from 'react-native-event-listeners';
+import { ListItem } from 'native-base';
+import WorkoutCard from '../components/WorkoutCard';
 
 /**
  * @author Alejandro Perez
@@ -9,11 +11,12 @@ import { EventRegister } from 'react-native-event-listeners';
 export default class LogScreen extends React.Component {
     static navigationOptions = {
         title: 'Log'
-    }
+    };
 
     state = {
-        workouts: [],
-    }
+        workouts:[],
+        changed: false
+    };
 
     /**
      * Searches for workouts locally and puts them into the screen state.
@@ -25,9 +28,10 @@ export default class LogScreen extends React.Component {
         //Iterate over all the workouts and add them to the state.
         do {
             workout = await AsyncStorage.getItem(`${id}`);
-            this.setState({workouts: [...this.state.workouts, JSON.parse(workout)]});
-            i++;
+            this.setState({workouts: new Set([...this.state.workouts, JSON.parse(workout)])});
+            id++;
         } while (workout !== null)
+        this.setState({changed: !this.state.changed});
     }
 
     componentDidMount() {
@@ -35,9 +39,13 @@ export default class LogScreen extends React.Component {
     }
 
     render() {
+        let {workouts, changed} = this.state;
         return (
             <SafeAreaView>
                 <Button title='Start Workout' onPress={() => this.props.navigation.navigate('Main')} />
+                <FlatList data={workouts} extraData={changed} renderItem={({item}) => 
+                    <WorkoutCard content={item.key} />} 
+                />
             </SafeAreaView>
         )
     }

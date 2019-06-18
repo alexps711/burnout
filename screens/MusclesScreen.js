@@ -72,8 +72,7 @@ export default class MusclesScreen extends React.Component {
                         extraData={changed}
                         renderItem={({ item }) =>
                             <Swipeable leftContent={(<Text>Pull to activate</Text>)} rightButtons={[
-                                <TouchableHighlight><Text>Button 1</Text></TouchableHighlight>,
-                                <TouchableHighlight><Text>Button 2</Text></TouchableHighlight>
+                                <TouchableHighlight><Text>Remove</Text></TouchableHighlight>,
                             ]}>
                                 {/* Pass the muscle group selected to the next screen and navigate to it. */}
                                 <ListItem onPress={() => this.props.navigation.navigate('SelectedMuscleScreen', { 'name': item.key })}>
