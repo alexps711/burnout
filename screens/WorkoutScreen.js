@@ -46,13 +46,17 @@ export default class WorkoutScreen extends React.Component {
         this.repsListener = EventRegister.addEventListener('exerciseChange', (updatedExercise) => {
             //Avoid duplicates in the exercises list.
             let exerciseArray = [...this.state.exercises];
-            for(let i=0; i<exerciseArray.length; i++){
-                if(exerciseArray[i].key === updatedExercise.key){
+            for (let i = 0; i < exerciseArray.length; i++) {
+                if (exerciseArray[i].key === updatedExercise.key) {
                     exerciseArray[i] = updatedExercise;
                 }
-            } 
-            this.setState({exercises: exerciseArray});
+            }
+            this.setState({ exercises: exerciseArray });
         });
+    }
+
+    componentWillUnmount() {
+        EventRegister.removeEventListener('goBack');
     }
 
     /**  Adjust the screen for the workout. */
@@ -88,13 +92,13 @@ export default class WorkoutScreen extends React.Component {
         let id = 0;
         try {
             //Increment id until a free one is found.
-            while ( await AsyncStorage.getItem(`${id}`) !== null) {
-                i++;
+            while (await AsyncStorage.getItem(`${id}`) !== null) {
+                id++;
             }
             //Store the workout.
             await AsyncStorage.setItem(`${id}`, JSON.stringify(this.state.exercises));
         } catch (err) {
-            //Do something.
+            console.log(err);
         }
     };
 
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: 'red',
-    }, 
+    },
     removeText: {
         paddingLeft: 5
     }

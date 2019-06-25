@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Button, AsyncStorage, Text, FlatList } from 'react-native';
+import { SafeAreaView, Button, AsyncStorage, Text, FlatList, StyleSheet, View } from 'react-native';
 import { EventRegister } from 'react-native-event-listeners';
 import { ListItem } from 'native-base';
 import WorkoutCard from '../components/WorkoutCard';
@@ -14,7 +14,7 @@ export default class LogScreen extends React.Component {
     };
 
     state = {
-        workouts:[],
+        workouts: [],
         changed: false
     };
 
@@ -23,30 +23,43 @@ export default class LogScreen extends React.Component {
      */
     _retrieveWorkouts = async () => {
         let id = 0;
-        let workout;
-
-        //Iterate over all the workouts and add them to the state.
-        do {
-            workout = await AsyncStorage.getItem(`${id}`);
-            this.setState({workouts: new Set([...this.state.workouts, JSON.parse(workout)])});
-            id++;
-        } while (workout !== null)
-        this.setState({changed: !this.state.changed});
+        let workout = await AsyncStorage.getItem(`${id}`);
+        try {
+            //Iterate over all the workouts and add them to the state.
+            while(workout != null){
+                this.setState({workouts: [...this.state.workouts, JSON.parse(workout)]});
+                id++;
+                workout = await AsyncStorage.getItem(`${id}`);
+            }
+            await this.setState({ changed: !this.state.changed });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     componentDidMount() {
         this.listener = EventRegister.addEventListener('backToLog', () => this._retrieveWorkouts());
     }
 
+    componentWillUnmount() {
+        EventRegister.removeEventListener('backToLog');
+    }
+
     render() {
-        let {workouts, changed} = this.state;
+        let { workouts, changed } = this.state;
         return (
-            <SafeAreaView>
+            <SafeAreaView style={styles.container}>
                 <Button title='Start Workout' onPress={() => this.props.navigation.navigate('Main')} />
-                <FlatList data={workouts} extraData={changed} renderItem={({item}) => 
-                    <WorkoutCard content={item.key} />} 
-                />
+                {workouts.length === 0 ? <View><Text>Hello</Text></View> : <FlatList data={workouts} extraData={changed} renderItem={({ item }) =>
+                    <WorkoutCard content={item.key} />} />}
             </SafeAreaView>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center'
+    }
+})

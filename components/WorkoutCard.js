@@ -20,7 +20,7 @@ export default class WorkoutCard extends React.Component {
                     <Text style={styles.titleText}>{content}</Text>
                 </CardItem>
                 <CardItem title >
-                    <Text></Text>
+                    <Text>dvlmdvndmsv</Text>
                 </CardItem>
             </Card >
         );
