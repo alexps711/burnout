@@ -7,7 +7,7 @@ import Swipeable from 'react-native-swipeable';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 27/06/2019
  */
 export default class MusclesScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -18,9 +18,6 @@ export default class MusclesScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // Tells the list to re-render.
-            // Swaps its value when the user tries to add a muscle group to the list.
-            changed: false,
             //Muscles rendered by default when no custom ones are added.
             muscles: [
                 { key: 'Chest' },
@@ -63,13 +60,12 @@ export default class MusclesScreen extends React.Component {
     };
 
     render() {
-        let { muscles, changed } = this.state;
+        let { muscles } = this.state;
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView>
                     <FlatList
                         data={muscles}
-                        extraData={changed}
                         renderItem={({ item }) =>
                             <Swipeable leftContent={(<Text>Pull to activate</Text>)} rightButtons={[
                                 <TouchableHighlight><Text>Remove</Text></TouchableHighlight>,

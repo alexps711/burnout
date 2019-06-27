@@ -5,7 +5,7 @@ import { Card, CardItem } from 'native-base';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 27/06/2019
  */
 export default class WorkoutCard extends React.Component {
     static propTypes = {
@@ -20,7 +20,7 @@ export default class WorkoutCard extends React.Component {
                     <Text style={styles.titleText}>{content}</Text>
                 </CardItem>
                 <CardItem title >
-                    <Text>dvlmdvndmsv</Text>
+                    <Text>Yet to implement!</Text>
                 </CardItem>
             </Card >
         );

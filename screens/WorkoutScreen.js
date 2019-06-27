@@ -7,10 +7,11 @@ import { EventRegister } from 'react-native-event-listeners'
 import ExerciseCard from '../components/ExerciseCard';
 import ActionButton from 'react-native-action-button';
 import Swipeable from 'react-native-swipeable';
+import { TextInput } from 'react-native-gesture-handler';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 27/06/2019
  */
 export default class WorkoutScreen extends React.Component {
     static navigationOptions = {
@@ -20,6 +21,7 @@ export default class WorkoutScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            workoutName : '',
             //Flips its value every time an exercise is selected.
             //Used to re-render the list of exercises.
             changed: false,
@@ -83,7 +85,7 @@ export default class WorkoutScreen extends React.Component {
     /** End the current workout and go back to the log screen */
     _finishWorkout = () => {
         this._saveWorkout();
-        EventRegister.emit('backToLog');
+        EventRegister.emit('backToLog', {key: this.state.workoutName, exercises: this.state.exercises});
         this.props.navigation.popToTop();
     }
 
@@ -96,7 +98,7 @@ export default class WorkoutScreen extends React.Component {
                 id++;
             }
             //Store the workout.
-            await AsyncStorage.setItem(`${id}`, JSON.stringify(this.state.exercises));
+            AsyncStorage.setItem(`${id}`, JSON.stringify({key: this.state.workoutName, exercises: this.state.exercises}));
         } catch (err) {
             console.log(err);
         }
@@ -111,6 +113,9 @@ export default class WorkoutScreen extends React.Component {
                     <Animated.View style={[styles.stopwatch, timerPosition.getLayout()]}>
                         <Stopwatch options={stopwatchStyle} start={workoutStarted} />
                     </Animated.View>
+                </View>
+                <View>
+                    <ListItem><TextInput placeholder="Workout Name" onChangeText={(input) => this.setState({workoutName: input})}/></ListItem>     
                 </View>
                 <View>
                     <Button title="Finish workout" onPress={() => this._finishWorkout()} />

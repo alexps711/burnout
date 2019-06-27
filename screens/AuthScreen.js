@@ -3,7 +3,7 @@ import {View, TextInput, StyleSheet, Button, AsyncStorage } from 'react-native';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 27/06/2019
  */
 export default class AuthScreen extends React.Component {
 

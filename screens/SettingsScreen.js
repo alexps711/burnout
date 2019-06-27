@@ -3,13 +3,13 @@ import { View, StyleSheet, Text } from 'react-native';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 27/06/2019
  */
 export default class SettingsScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Settings</Text>
+                <Text>Settings -- Yet to implement!</Text>
             </View>
         );
     }

@@ -1,12 +1,12 @@
 import React from 'react';
 import { SafeAreaView, Button, AsyncStorage, Text, FlatList, StyleSheet, View } from 'react-native';
 import { EventRegister } from 'react-native-event-listeners';
-import { ListItem } from 'native-base';
+import { Content } from 'native-base';
 import WorkoutCard from '../components/WorkoutCard';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 27/06/2019
  */
 export default class LogScreen extends React.Component {
     static navigationOptions = {
@@ -15,7 +15,6 @@ export default class LogScreen extends React.Component {
 
     state = {
         workouts: [],
-        changed: false
     };
 
     /**
@@ -23,35 +22,44 @@ export default class LogScreen extends React.Component {
      */
     _retrieveWorkouts = async () => {
         let id = 0;
-        let workout = await AsyncStorage.getItem(`${id}`);
+        let workout;
+        let workouts = [];
         try {
-            //Iterate over all the workouts and add them to the state.
-            while(workout != null){
-                this.setState({workouts: [...this.state.workouts, JSON.parse(workout)]});
-                id++;
+            
+            while (workout !== null) {
+                if(workout !== undefined){
+                    workouts.push(JSON.parse(workout));
+                    id++;
+                }
                 workout = await AsyncStorage.getItem(`${id}`);
             }
-            await this.setState({ changed: !this.state.changed });
-        } catch (err) {
-            console.log(err);
-        }
+            this.setState({ workouts: workouts });
+        } catch (err) { console.log(err); }
     }
 
     componentDidMount() {
-        this.listener = EventRegister.addEventListener('backToLog', () => this._retrieveWorkouts());
+        this._retrieveWorkouts();
+        this.listener = EventRegister.addEventListener('backToLog', (newWorkout) => {
+            this.setState({
+                workouts: [...this.state.workouts, newWorkout],
+            });
+        });
     }
 
     componentWillUnmount() {
-        EventRegister.removeEventListener('backToLog');
+        EventRegister.removeEventListener(this.listener);
     }
 
     render() {
-        let { workouts, changed } = this.state;
+        let { workouts } = this.state;
+        console.log(this.state.workouts);
         return (
             <SafeAreaView style={styles.container}>
                 <Button title='Start Workout' onPress={() => this.props.navigation.navigate('Main')} />
-                {workouts.length === 0 ? <View><Text>Hello</Text></View> : <FlatList data={workouts} extraData={changed} renderItem={({ item }) =>
-                    <WorkoutCard content={item.key} />} />}
+                <Content padder>
+                    <FlatList data={workouts} renderItem={({ item }) =>
+                        <WorkoutCard content={item.key} />} />
+                </Content>
             </SafeAreaView>
         )
     }
@@ -60,6 +68,5 @@ export default class LogScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center'
     }
 })
