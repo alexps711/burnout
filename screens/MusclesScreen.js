@@ -7,7 +7,7 @@ import Swipeable from 'react-native-swipeable';
 
 /**
  * @author Alejandro Perez
- * @version 27/06/2019
+ * @version 1.0.0
  */
 export default class MusclesScreen extends React.Component {
     static navigationOptions = {

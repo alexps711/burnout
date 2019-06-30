@@ -4,6 +4,10 @@ import { ListItem, Content } from 'native-base';
 import Swipeable from 'react-native-swipeable';
 import ExerciseCard from '../components/ExerciseCard';
 
+/**
+ * @author Alejandro Perez Salas
+ * @version 1.0.0
+ */
 export default class FinishedWorkoutScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Workout',
@@ -51,4 +55,4 @@ const styles = StyleSheet.create({
     removeText: {
         paddingLeft: 5
     }
-})
+});

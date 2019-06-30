@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 
 /**
  * @author Alejandro Perez
- * @version 27/06/2019
+ * @version 1.0.0
  */
 export default class SettingsScreen extends React.Component {
     render() {

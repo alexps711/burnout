@@ -4,7 +4,7 @@ import { EventRegister } from 'react-native-event-listeners';
 
 /**
  * @author Alejandro Perez
- * @version 27/06/2019
+ * @version 1.0.0
  */
 export default class AddScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({

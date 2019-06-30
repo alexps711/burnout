@@ -6,7 +6,7 @@ import WorkoutCard from '../components/WorkoutCard';
 
 /**
  * @author Alejandro Perez
- * @version 27/06/2019
+ * @version 1.0.0
  */
 export default class LogScreen extends React.Component {
     static navigationOptions = {
@@ -56,7 +56,7 @@ export default class LogScreen extends React.Component {
             <SafeAreaView style={styles.container}>
                 <Button title='Start Workout' onPress={() => this.props.navigation.navigate('Main')} />
                 <Content padder>
-                    {workouts.length === 0 ? <Text>You haven't finished any workouts yet!</Text> :
+                    {workouts.length === 0 ? <View style={styles.text}><Text>You haven't finished any workouts yet!</Text></View> :
                         <FlatList data={workouts} renderItem={({ item }) =>
                             <WorkoutCard title={item.key} startTime={item.startTime} exercises={item.exercises} />} />
                     }
@@ -69,5 +69,11 @@ export default class LogScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    text: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 250
     }
-})
+});

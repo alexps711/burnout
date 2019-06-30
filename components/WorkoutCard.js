@@ -8,7 +8,7 @@ import { withNavigation } from 'react-navigation';
 
 /**
  * @author Alejandro Perez
- * @version 27/06/2019
+ * @version 1.0.0
  */
 class WorkoutCard extends React.Component {
     static propTypes = {

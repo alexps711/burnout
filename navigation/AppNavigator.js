@@ -5,7 +5,7 @@ import AuthScreen from '../screens/AuthScreen';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 1.0.0
  */
 
 const App = createSwitchNavigator({

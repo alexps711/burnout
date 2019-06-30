@@ -6,7 +6,7 @@ import WorkoutStack from './WorkoutStack';
 
 /**
  * @author Alejandro Perez
- * @version 12/06/2019
+ * @version 1.0.0
  */
 export default createBottomTabNavigator({
     Workout: WorkoutStack,

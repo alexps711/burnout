@@ -11,7 +11,7 @@ import { TextInput } from 'react-native-gesture-handler';
 
 /**
  * @author Alejandro Perez
- * @version 27/06/2019
+ * @version 1.0.0
  */
 export default class WorkoutScreen extends React.Component {
     static navigationOptions = {
