@@ -11,8 +11,8 @@ import {EventRegister} from 'react-native-event-listeners';
 export default class ExerciseCard extends React.Component {
     static propTypes = {
         content: PropTypes.string.isRequired,
-        setsInput: PropTypes.number,
-        repsInput: PropTypes.number
+        sets: PropTypes.string,
+        reps: PropTypes.string
     };
 
     constructor(props) {
@@ -41,16 +41,16 @@ export default class ExerciseCard extends React.Component {
     }
 
     render() {
-        const { content, setsInput, repsInput } = this.props;
+        const { content, sets, reps } = this.props;
         return (
             <Card on>
                 <CardItem header>
                     <Text style={styles.titleText}>{content}</Text>
                 </CardItem>
                 <CardItem title >
-                    <TextInput style={styles.setsRepsInput} onChangeText={(data) => this.emitStats('sets', data)} placeholder='0' keyboardType='numeric' setsInput onEndEditing={() => { this.repsInputText.current.focus(); }}/>
+                    <TextInput style={styles.setsRepsInput} onChangeText={(data) => this.emitStats('sets', data)} placeholder={sets} keyboardType='numeric' setsInput onEndEditing={() => { this.repsInputText.current.focus(); }}/>
                     <Text style={styles.setsRepsText}> Sets  </Text>
-                    <TextInput style={styles.setsRepsInput} onChangeText={(data) => this.emitStats('reps', data)} ref={this.repsInputText} placeholder='0' repsInput keyboardType='numeric' />
+                    <TextInput style={styles.setsRepsInput} onChangeText={(data) => this.emitStats('reps', data)} ref={this.repsInputText} placeholder={reps} repsInput keyboardType='numeric' />
                     <Text style={styles.setsRepsText}> Reps</Text>
                 </CardItem>
             </Card >

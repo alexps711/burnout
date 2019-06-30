@@ -4,6 +4,7 @@ import MusclesScreen from '../screens/MusclesScreen';
 import SelectedMuscleScreen from '../screens/SelectedMuscleScreen';
 import AddScreen from '../screens/AddScreen';
 import LogScreen from '../screens/LogScreen';
+import FinishedWorkoutScreen from '../screens/FinishedWorkoutScreen';
 
 /**
  * @author Alejandro Perez
@@ -18,6 +19,7 @@ const MainStack = createStackNavigator({
 
 export default createStackNavigator({
     Log: LogScreen,
+    FinishedWorkout: FinishedWorkoutScreen,
     Main: {
         screen: MainStack,
         //Avoid duplicate headers.

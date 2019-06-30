@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, FlatList, Text, StyleSheet, Button } from 'react-native';
+import { SafeAreaView, ScrollView, FlatList, Text, StyleSheet, Button, AsyncStorage } from 'react-native';
 import { ListItem } from 'native-base';
 import { EventRegister } from 'react-native-event-listeners';
 
@@ -9,8 +9,42 @@ import { EventRegister } from 'react-native-event-listeners';
  */
 export default class SelectedMuscleScreen extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        title: navigation.getParam('name')
+        title: navigation.getParam('name'),
+        headerRight: <Button title="Add" onPress={() => navigation.navigate('Modal')} />
     });
+
+    state = {
+        exercises: this.getListData(this.props.navigation.getParam('name')),
+    }
+    componentDidMount() {
+        this._updateExerciseList();
+        // Listens for when the user wants to add a new muscle group.
+        this.listener = EventRegister.addEventListener('updateExercises', async (data) => {
+            //Update the muscles list in the storage with the new data.
+            await AsyncStorage.setItem('exercises', JSON.stringify([...this.state.exercises, { key: data }]));
+            this._updateExerciseList();
+        });
+    }
+
+    componentWillUnmount() {
+        //Remove the listener before moving to another screen.
+        EventRegister.removeEventListener(this.listener);
+    }
+
+    /**
+     * Sets the state to the current exercise list in the storage.
+     */
+    _updateExerciseList = async () => {
+        try {
+            const exerciseList = await AsyncStorage.getItem('exercises');
+            //Might be redundant -- CHECK
+            if (exerciseList !== null) {
+                this.setState({ exercises: JSON.parse(exerciseList) });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     /**
      * Navigate back to the Workout screen passing the excercise selected.
@@ -37,11 +71,12 @@ export default class SelectedMuscleScreen extends React.Component {
     };
 
     render() {
+        let { exercises } = this.state;
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView>
                     <FlatList
-                        data={this.getListData(this.props.navigation.getParam('name'))}
+                        data={exercises}
                         renderItem={({ item }) => <ListItem
                             onPress={() => this._returnTo(item.key)}>
                             <Text style={styles.item}>{item.key}</Text>

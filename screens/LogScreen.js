@@ -17,26 +17,6 @@ export default class LogScreen extends React.Component {
         workouts: [],
     };
 
-    /**
-     * Searches for workouts locally and puts them into the screen state.
-     */
-    _retrieveWorkouts = async () => {
-        let id = 0;
-        let workout;
-        let workouts = [];
-        try {
-            
-            while (workout !== null) {
-                if(workout !== undefined){
-                    workouts.push(JSON.parse(workout));
-                    id++;
-                }
-                workout = await AsyncStorage.getItem(`${id}`);
-            }
-            this.setState({ workouts: workouts });
-        } catch (err) { console.log(err); }
-    }
-
     componentDidMount() {
         this._retrieveWorkouts();
         this.listener = EventRegister.addEventListener('backToLog', (newWorkout) => {
@@ -50,15 +30,36 @@ export default class LogScreen extends React.Component {
         EventRegister.removeEventListener(this.listener);
     }
 
+    /**
+     * Searches for workouts locally and puts them into the screen state.
+     */
+    _retrieveWorkouts = async () => {
+        let id = 0;
+        let workout;
+        let workouts = [];
+        try {
+
+            while (workout !== null) {
+                if (workout !== undefined) {
+                    workouts.push(JSON.parse(workout));
+                    id++;
+                }
+                workout = await AsyncStorage.getItem(`${id}`);
+            }
+            this.setState({ workouts: workouts });
+        } catch (err) { console.log(err); }
+    }
+
     render() {
         let { workouts } = this.state;
-        console.log(this.state.workouts);
         return (
             <SafeAreaView style={styles.container}>
                 <Button title='Start Workout' onPress={() => this.props.navigation.navigate('Main')} />
                 <Content padder>
-                    <FlatList data={workouts} renderItem={({ item }) =>
-                        <WorkoutCard content={item.key} />} />
+                    {workouts.length === 0 ? <Text>You haven't finished any workouts yet!</Text> :
+                        <FlatList data={workouts} renderItem={({ item }) =>
+                            <WorkoutCard title={item.key} startTime={item.startTime} exercises={item.exercises} />} />
+                    }
                 </Content>
             </SafeAreaView>
         )

@@ -10,10 +10,9 @@ import Swipeable from 'react-native-swipeable';
  * @version 27/06/2019
  */
 export default class MusclesScreen extends React.Component {
-    static navigationOptions = ({ navigation }) => ({
+    static navigationOptions = {
         title: "Muscles",
-        headerRight: <Button title="Add" onPress={() => navigation.navigate('Modal')} />
-    });
+    };
 
     constructor(props) {
         super(props);
@@ -25,39 +24,11 @@ export default class MusclesScreen extends React.Component {
                 { key: 'Abs' },
                 { key: 'Biceps' },
                 { key: 'Triceps' },
+                { key: 'Legs'},
+                { key: 'Shoulders'}
             ]
         };
     }
-
-    componentDidMount() {
-        this._updateMusclesList();
-        // Listens for when the user wants to add a new muscle group.
-        this.listener = EventRegister.addEventListener('updateMuscles', async (data) => {
-            //Update the muscles list in the storage with the new data.
-            await AsyncStorage.setItem('muscles', JSON.stringify([...this.state.muscles, { key: data }]));
-            this._updateMusclesList();
-        });
-    }
-
-    componentWillUnmount() {
-        //Remove the listener before moving to another screen.
-        EventRegister.removeEventListener(this.listener);
-    }
-
-    /**
-     * Sets the state to the current muscles list in the storage.
-     */
-    _updateMusclesList = async () => {
-        try {
-            const musclesList = await AsyncStorage.getItem('muscles');
-            //Might be redundant -- CHECK
-            if (musclesList !== null) {
-                this.setState({ muscles: JSON.parse(musclesList) });
-            }
-        } catch (error) {
-            console.log(err);
-        }
-    };
 
     render() {
         let { muscles } = this.state;

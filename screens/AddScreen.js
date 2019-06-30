@@ -21,7 +21,7 @@ export default class AddScreen extends React.Component {
      * @param {string} data - the input typed in by the user.
      */
     _returnTo = (data) => {
-        EventRegister.emit('updateMuscles', data);
+        EventRegister.emit('updateExercise', data);
         this.props.navigation.goBack();
     };
 
@@ -29,7 +29,7 @@ export default class AddScreen extends React.Component {
         let { input } = this.state;
         return(
             <View style={styles.container}>
-                <TextInput  placeholder='Type a muscle group' value={input} onChangeText={(text) => this.setState({input: text})}/>
+                <TextInput  style={styles.input} placeholder='Type an exercise' value={input} onChangeText={(text) => this.setState({input: text})}/>
                 <Button title='Submit' onPress={() => this._returnTo(input)} />
             </View>
         );
@@ -41,5 +41,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    input: {
+        fontSize: 20
     }
 });

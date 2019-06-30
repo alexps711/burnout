@@ -82,10 +82,15 @@ export default class WorkoutScreen extends React.Component {
         }).start();
     };
 
-    /** End the current workout and go back to the log screen */
-    _finishWorkout = () => {
-        this._saveWorkout();
-        EventRegister.emit('backToLog', {key: this.state.workoutName, exercises: this.state.exercises});
+    /** 
+     * End the current workout and go back to the log screen. 
+     * If true passed in, the user cancelled the workout.
+     */
+    _finishWorkout = (cancelled) => {
+        if(!cancelled){
+            this._saveWorkout();
+            EventRegister.emit('backToLog', {key: this.state.workoutName, exercises: this.state.exercises, startTime: this.state.startTime});
+        }
         this.props.navigation.popToTop();
     }
 
@@ -98,11 +103,17 @@ export default class WorkoutScreen extends React.Component {
                 id++;
             }
             //Store the workout.
-            AsyncStorage.setItem(`${id}`, JSON.stringify({key: this.state.workoutName, exercises: this.state.exercises}));
+            AsyncStorage.setItem(`${id}`, JSON.stringify({key: this.state.workoutName, exercises: this.state.exercises, startTime: this.state.startTime}));
         } catch (err) {
             console.log(err);
         }
     };
+
+    /** Remove an exercise */
+    removeExercise(item) {
+        let updatedExercises = this.state.exercises;
+        
+    }
 
     render() {
         let { timerPosition, startTime, changed, workoutStarted, exercises } = this.state;
@@ -117,13 +128,14 @@ export default class WorkoutScreen extends React.Component {
                 <View>
                     <ListItem><TextInput placeholder="Workout Name" onChangeText={(input) => this.setState({workoutName: input})}/></ListItem>     
                 </View>
-                <View>
-                    <Button title="Finish workout" onPress={() => this._finishWorkout()} />
+                <View style={styles.finishButtons}>
+                    <Button title="Cancel workout" onPress={() => this._finishWorkout(true)} />
+                    <Button title="Finish workout" onPress={() => this._finishWorkout(false)} />
                 </View>
                 <Content padder>
                     <FlatList data={exercises} extraData={changed} renderItem={({ item }) =>
-                        <Swipeable rightButtons={[<TouchableHighlight style={styles.removeButton}><Text style={styles.removeText}>Remove</Text></TouchableHighlight>]} onLeftActionRelease={() => console.log("hello")} >
-                            <ExerciseCard content={item.key} />
+                        <Swipeable rightButtons={[<TouchableHighlight style={styles.removeButton} onPress={() => this.setState({exercises: exercises.filter(exercise => exercise.key === item.key), changed: !changed})}><Text style={styles.removeText}>Remove</Text></TouchableHighlight>]} onLeftActionRelease={() => console.log("hello")} >
+                            <ExerciseCard content={item.key} sets="0" reps="0" />
                         </Swipeable>}
                     />
                 </Content>
@@ -141,11 +153,6 @@ const styles = StyleSheet.create({
     stopwatch: {
         position: 'absolute',
     },
-    button: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     exercise: {
         paddingTop: 20,
     },
@@ -162,6 +169,10 @@ const styles = StyleSheet.create({
     },
     removeText: {
         paddingLeft: 5
+    },
+    finishButtons: {
+        justifyContent: 'center',
+        flexDirection: 'row'
     }
 });
 
